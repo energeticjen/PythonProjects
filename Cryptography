@@ -1,0 +1,91 @@
+# key (strings)
+alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+key =   "XPMGTDHLYONZBWEARKJUFSCIQV"
+
+# this code is copy-pasted from Andy, but I added comments to help me better understand what was happening.
+def main():
+  keepGoing = True
+  while keepGoing:
+
+    # response gets whatever the return statement is from the menu()
+    response = menu()
+    if response == "1":
+      plain = input("text to be encoded: ")
+      # this is calling the encode function and is passing the plain parameter into the function, then printing out the return statement
+      print(encode(plain))
+    elif response == "2":
+      coded = input("code to be decyphered: ")
+      print (decode(coded))
+    elif response == "0":
+      print ("Thanks for doing secret spy stuff with me.")
+      keepGoing = False
+    else:
+      print ("I don't know what you want to do...")
+      
+def menu():
+    # output options
+    print("SECRET DECODER MENU")
+    print()
+    print("0) Quit\n"
+          "1) Encode\n"
+          "2) Decode\n")
+          
+    # take user input
+    response = input("What do you want to do?")
+    
+    # return variable to main
+    return response
+
+def encode(text):
+  
+  # capitalize the text
+  text = text.upper()
+
+  # variable to take encoded string
+  encodedMessage = ""
+  
+  # for loop through every letter in text
+  for i in text:
+    
+    # if letter is in alpha:
+    if i in alpha:
+      
+      # find index of current letter in alpha
+      value = alpha.index(i)
+      
+      # find the letter in the key equal to the value of the letter in alpha
+      letter = key[value]
+    
+      # add the corresponding letter in alpha key to the end of the encodedMessage
+      encodedMessage = encodedMessage + letter
+ 
+  # return encodedMessage to main
+  return encodedMessage
+
+def decode(text):
+  
+  # capitalize text
+  text = text.upper()
+
+  # variable to take decoded string
+  decodedMessage = ""
+  
+  # for loop through every letter in text
+  for i in text:
+    
+    # if letter is in key:
+    if i in key:
+      
+      # find index of current letter in key
+      value = key.index(i)
+      
+      # find the letter in alpha equal to the value of the letter in key
+      letter = alpha[value]
+
+      # add the corresponding letter in alpha to the end of decodedMessage
+      decodedMessage = decodedMessage + letter
+
+  # return decodedMessage to main
+  return decodedMessage
+  
+main()
