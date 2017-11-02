@@ -1,0 +1,178 @@
+import random
+import string
+
+# key (strings)
+alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+key =   "XPMGTDHLYONZBWEARKJUFSCIQV"
+newKey = list(string.ascii_uppercase)
+random.shuffle(newKey)
+
+def main():
+  keepGoing = True
+  while keepGoing:
+
+    # response gets whatever the return statement is from the menu()
+    response = menu()
+    
+    # encoding options
+    if response == "1":
+        # offering the option of the original key or a randomly generated key
+      response2 = input("Would you like to use 1)the original key, or 2)a new randomly generated key?"
+                        "\nInput the corresponding number: ")
+      # if the original key is used
+      if response2 == "1":
+          plain = input("text to be encoded: ")
+          print(encode(plain))
+      # if a new random key wants to be used, go to function encode2
+      elif response2 == "2":
+          plain = input("text to be encoded: ")
+          print(encode2(plain))
+      else:
+          print ("I don't know what you want to do...")
+          
+     # decoding options     
+    elif response == "2":
+        # finding out which key to use
+      response3 = input("Did you use 1)the original key, or 2)a new randomly generated key?"
+                        "\nInput the corresponding number: ")
+      # if original key
+      if response3 == "1":
+          coded = input("code to be decyphered: ")
+          print (decode(coded))
+      # if new key
+      elif response2 == "2":
+          coded = input("code to be decyphered: ")
+          print(decode2(coded))
+      else:
+          print ("I don't know what you want to do...")
+          
+    # exit choice  
+    elif response == "0":
+      print ("Thanks for doing secret spy stuff with me.")
+      keepGoing = False
+      
+    # error choice
+    else:
+      print ("I don't know what you want to do...")
+      
+def menu():
+    # output options
+    print("SECRET DECODER MENU")
+    print()
+    print("0) Quit\n"
+          "1) Encode\n"
+          "2) Decode\n")
+          
+    # take user input
+    response = input("What do you want to do?")
+    
+    # return variable to main
+    return response
+   
+def encode(text):
+  
+  # capitalize the text (string manipulation= .upper)
+  text = text.upper()
+
+  # variable to take encoded string
+  encodedMessage = ""
+  
+  # for loop through every letter in text (for i in string)
+  for i in text:
+    
+    # if letter is in alpha:
+    if i in alpha:
+      
+      # find index of current letter in alpha
+      value = alpha.index(i)
+      
+      # find the letter in the key equal to the value of the letter in alpha
+      letter = key[value]
+    
+      # add the corresponding letter in alpha key to the end of the encodedMessage
+      encodedMessage = encodedMessage + letter
+
+    
+  # return encodedMessage to main
+  return encodedMessage
+
+def encode2(text):
+    
+  # capitalize the text
+  text = text.upper()
+
+  # variable to take encoded string
+  encodedMessage = ""
+  
+  # for loop through every letter in text (for i in string)
+  for i in text:
+    
+    # if letter is in alpha:
+    if i in alpha:
+      
+      # find index of current letter in alpha
+      value = alpha.index(i)
+      
+      # find the letter in the newKey equal to the value of the letter in alpha
+      letter = newKey[value]
+    
+      # add the corresponding letter in newKey to the end of the encodedMessage
+      encodedMessage = encodedMessage + letter
+
+    
+  # return encodedMessage to main
+  return encodedMessage
+
+def decode(text):
+  
+  # capitalize text
+  text = text.upper()
+
+  # variable to take decoded string
+  decodedMessage = ""
+  
+  # for loop through every letter in text
+  for i in text:
+    
+    # if letter is in key:
+    if i in key:
+      
+      # find index of current letter in key
+      value = key.index(i)
+      
+      # find the letter in alpha equal to the value of the letter in key
+      letter = alpha[value]
+
+      # add the corresponding letter in alpha to the end of decodedMessage
+      decodedMessage = decodedMessage + letter
+
+  # return decodedMessage to main
+  return decodedMessage
+
+def decode2(text):
+  
+  # capitalize text
+  text = text.upper()
+
+  # variable to take decoded string
+  decodedMessage = ""
+  
+  # for loop through every letter in text
+  for i in text:
+    
+    # if letter is in newKey:
+    if i in newKey:
+      
+      # find index of current letter in newKey
+      value = newKey.index(i)
+      
+      # find the letter in alpha equal to the value of the letter in newKey
+      letter = alpha[value]
+
+      # add the corresponding letter in alpha to the end of decodedMessage
+      decodedMessage = decodedMessage + letter
+
+  # return decodedMessage to main
+  return decodedMessage
+  
+main()
