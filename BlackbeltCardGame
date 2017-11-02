@@ -1,0 +1,438 @@
+###         This is an attempt at Old Maid          ###
+### This program works all the way up until the end.
+### Depending on how the cards end up, different broken
+### things will occur. I am also sending an even more broken
+### version that was an attempt to fix this issue. Clearly,
+### that didn't work. But if you could tell me what exactly
+### I am doing wrong, or what it is I'm forgetting, I will
+### be eternally grateful. I feel like I'm just patching a
+### leaky boat with random things that may or may not work.
+
+
+from random import *
+#import pdb
+#pdb.set_trace()
+
+# global variables
+NUMCARDS = 52
+DECK = 0
+PLAYER = 1
+COMPUTER = 2
+PLAYERPAIRS = 3
+COMPUTERPAIRS = 4
+OLDMAID = 5
+
+cardLoc = [0] * NUMCARDS
+suitName = ("Hearts", "Diamonds", "Spades", "Clubs")
+rankName = ("Ace", "Two", "Three", "Four", "Five", "Six", "Seven", 
+            "Eight", "Nine", "Ten", "Jack", "Queen", "King")
+
+def main():
+
+    # so the game is only played once by default
+    onlyOnce = True
+    while(onlyOnce):
+
+        # Introductions and instructions
+        print("""Hello! Let's play Old Maid!
+              The rules are really easy. We'll each draw cards until
+              the deck is empty, but there'll be an uneven amount of
+              cards, because the Quen of Clubs has been removed! After
+              we've gone through our hands and removed all the pairs,
+              laying them face up on the table, we take turns picking
+              one card from each other's hands. If we make a pair, we
+              lay it down! If not, oh well. We keep taking a card and
+              making pairs until there's only one card left --
+              The Old Maid!
+              Whoever ends up with her is the loser!
+
+              Okay, here we go!""")
+        
+        # to break up the wall of text that is output
+        try:
+            print()
+            input("Press Enter to continue...")
+        except SyntaxError:
+            pass
+        
+        clearDeck()
+
+        # give all the cards evenly to the two players
+        for i in range(26):
+            assignCard(PLAYER)
+            assignCard(COMPUTER)
+
+        # remove the Queen of Clubs (after passing out the cards makes this random)
+        cardLoc[50] = 5
+
+        # check for pairs for both players
+        checkPair(PLAYER)
+        checkPair(COMPUTER)
+
+        # main loop of the game where the players take a random card from each other and discard pairs made
+        keepGoing = True
+        while(keepGoing):
+            keepGoing = drawCard(PLAYER) 
+            keepGoing = checkPair(PLAYER)
+            keepGoing = drawCard(COMPUTER)
+            keepGoing = checkPair(COMPUTER)
+
+    # when the game is over
+    # when keepGoing is False
+    print()
+    answer = input("Would you like to play again? (y)es or (n)o >> ")
+
+    # play again
+    if answer == "y":
+        print("Hooray!")
+        onlyOnce = False
+        
+    # stop playing
+    elif answer == "n":
+        print("Ok, goodbye!")
+        
+
+    # error message
+    else:
+        print()
+        answer = input("I'm sorry, could you repeat that? Pick (y)es or (n)o >> ")
+
+
+
+def clearDeck():
+    # puts all the cards in the deck (set at 0)
+    cardLoc = [0] * NUMCARDS
+
+
+    
+def assignCard(player):
+    keepGoing = True
+    while (keepGoing):
+        
+        # generate a random number between 0 and 51 and assign it to card
+        card = randint(0, 51)
+
+        # if the spot in the cardLoc list at the random number is in the deck, give it to one of the players
+        if cardLoc[card] == 0:
+            cardLoc[card] = player
+            keepGoing = False
+
+            
+
+def checkPair(player):
+    # names for clearer output statements
+    if player == 1:
+        name = "You"
+    if player == 2:
+        name = "Computer"
+        
+    # display PLAYER'S hand
+    if player == 1:
+        print()
+        print("This is your hand:")
+        for i in range(NUMCARDS):
+            # check to see if the card at i is the player's card
+            if cardLoc[i] == player:
+                #find the suit and number of card
+                suit = i // 13
+                number = i % 13
+                print(rankName[number] + " of " + suitName[suit])
+
+        # to break up the wall of text that is output
+        try:
+            print()
+            input("Press Enter to continue...")
+        except SyntaxError:
+            pass
+
+    # display pairs for players  
+    print()
+    print("Pairs for {}:".format(name))
+    for i in range (NUMCARDS):
+
+        # check to see if the card at i is the player's card
+        if cardLoc[i] == player:
+            suit = i // 13
+            number = i % 13
+
+            # saving the different-suit-but-same-number as a new variable
+            numberHearts = number
+            numberDiamonds = number + 13
+            numberSpades = number + 26
+            numberClubs = number + 39
+
+            # check that the card at location [numberHearts] is the player's
+            if cardLoc[numberHearts] == player:
+
+                # if the player has the heart number and the diamond number, put both in player's pair pile
+                if cardLoc[numberHearts] == cardLoc[numberDiamonds]:
+                    cardLoc[numberHearts] = cardLoc[numberHearts] + 2
+                    cardLoc[numberDiamonds] = cardLoc[numberDiamonds] + 2
+
+                    # output the pair
+                    print("Pair! " + rankName[number] + " of Hearts and " + rankName[number] + " of Diamonds")
+
+            # check that the card at location [numberSpades] is the player's
+            if cardLoc[numberSpades] == player:
+
+                # if the player has the spade number and the club number, put both in player's pair pile   
+                if cardLoc[numberSpades] == cardLoc[numberClubs]:
+                    cardLoc[numberSpades] = cardLoc[numberSpades] + 2
+                    cardLoc[numberClubs] = cardLoc[numberClubs] + 2
+
+                    # output the pair
+                    print("Pair! " + rankName[number] + " of Spades and " + rankName[number] + " of Clubs")
+
+    # breaking up the wall of text output
+    try:
+        print()
+        input("Press Enter to continue...")
+    except SyntaxError:
+        pass
+
+    # if PLAYER, display what's left in their hand and how many cards                       
+    if player == 1:
+        print()
+        print("This is what's left in your hand:")
+        handTotal = 0
+
+        # go through the array and check each location for 1
+        for i in range(NUMCARDS):
+            if cardLoc[i] == PLAYER:
+
+                #count how many cards are left
+                handTotal = handTotal + 1
+                suit = i // 13
+                number = i % 13
+
+                # output card name
+                print(rankName[number] + " of " + suitName[suit])
+
+        # output how many cards are in PLAYER'S hand        
+        print()
+        print("You have {} cards left in your hand.".format(handTotal))
+        
+        # if PLAYER has one card left
+        if handTotal == 1:
+
+            # this is to make sure the Computer's hand is empty
+            for i in range(NUMCARDS):
+                if cardLoc[i] != 2:
+
+                    # output losing statement
+                    print()
+                    print("Awwww. Looks like you lost! You have the old maid! Better luck next time!")
+
+                    # return the value False so that the main function will stop looping
+                    keepGoing = False
+                    break
+
+        # if PLAYER has no cards left
+        if handTotal == 0:
+
+            # this is to make sure that the Computer's hand only has the Queen of Spades
+            # if COMPUTER has Queen of Spades
+            if cardLoc[37] == 2:
+
+                # check locations 0-36 in cardLoc (we want no '2's, which mean COMPUTER)
+                for i in range(0,36):
+                    if cardLoc[i] != 2:
+
+                        # check locations 38-51 in cardLoc (again, no '2's, which mean COMPUTER)
+                        for i in range(38,51):
+                            if cardLoc[i] != 2:
+
+                                # output winning statement
+                                print()
+                                print("Hooray for you! You won! I got left with the old maid! I hope I do better next time!")
+
+                                # return the value False so that the main function will stop looping
+                                keepGoing = False
+                                
+                                
+        # breaking up the wall of text output
+        try:
+            print()
+            input("Press Enter to continue...")
+        except SyntaxError:
+            pass
+
+    # if COMPUTER, display only how many cards are left
+    if player == 2:
+        print()
+        handTotal2 = 0
+
+        # count how many cards are left
+        for i in range(NUMCARDS):
+            if cardLoc[i] == COMPUTER:
+                handTotal2 = handTotal2 + 1
+
+        # output how many cards COMPUTER has
+        print("The Computer -- me -- has {} cards left in its hand.".format(handTotal2))
+
+        # if COMPUTER has more than 1 card, return to main function and keep looping
+        if handTotal2 > 1:
+            return True
+
+        # if COMPUTER has 1 card left, check the number of cards PLAYER has
+        if handTotal2 == 1:
+
+            # this is to make sure that the Player's hand is empty
+            # if PLAYER has more than 1 card, return to main function and keep looping
+            if handTotal > 1:
+                return True
+
+            #if PLAYER has no cards,
+            if handTotal < 1:
+               # output winning statement
+                print()
+                print("Hooray for you! You won! I got left with the old maid! I hope I do better next time!")
+
+                # return False to main function to stop looping
+                return False
+
+        # if COMPUTER has no cards left
+        if handTotal2 == 0:
+
+            # this is to make sure that the Player only has the Queen of Spades
+            # if PLAYER has the Queen of Spades
+            if cardLoc[37] == 1:
+
+                # check locations in cardLoc from 0-36 (we want no '1's, which mean PLAYER)
+                for i in range(0,36):
+                    if cardLoc[i] != 1:
+
+                        # check locations in cardLoc from 38-51 (again, no '1's, which mean PLAYER)
+                        for i in range(38,51):
+                            if cardLoc[i] != 1:
+
+                                # output losing statement
+                                print()
+                                print("Awwww. Looks like you lost! You have the old maid! Better luck next time!")
+
+                                # return False to main function to stop looping
+                                return False
+
+        # breaking up the wall of text output
+        try:
+            print()
+            input("Press Enter to continue...")
+        except SyntaxError:
+            pass
+
+        
+# take a card from the other player        
+def drawCard(player):
+
+    # if player is PLAYER
+    if player == 1:
+
+        # variable to control the looping in this section of the function
+        keepGoing = True
+        
+        # ask if PLAYER would like to draw a card from COMPUTER'S hand
+        print()
+        answer = input("Would you like to take a card from the Computer's -- I mean *my* -- hand? (y)es or (n)o >> ")
+        while(keepGoing):
+
+            # if PLAYER says yes
+            if answer == "y":
+
+                # pick a random card
+                card = randint(0,51)
+                
+                # if random card is currently in COMPUTER's hand, put it in PLAYER'S
+                if cardLoc[card] == COMPUTER:
+                    cardLoc[card] = PLAYER
+                    print()
+                    print("You took a card!")
+
+                    # leave this loop and return to main function
+                    keepGoing = False
+
+            # if PLAYER says no
+            elif answer == "n":
+
+                # offer a second chance to change PLAYER'S mind
+                answer2 = input("You won't be able to make any more pairs! Do you forfeit? (y)es or (n)o >> ")
+
+                # if PLAYER quits, COMPUTER wins
+                if answer2 == "y":
+                    print()
+                    print("Hooray! Computer wins! I mean, *I* win!")
+
+                    # return False to main function to stop looping
+                    return False
+
+                # if PLAYER wants to keep playing, offer original choice again
+                elif answer2 == "n":
+                    print()
+                    answer = input("Alright, then please take a card from the Computer's -- uh, *my* -- hand. (y)es or (n)o >> ")
+
+                # if there was an input error
+                else:
+                    print()
+                    answer = input("I'm sorry, could you repeat that? Pick (y)es or (n)o >> ")
+
+            # if there was an input error
+            else:
+                print()
+                answer = input("I'm sorry, could you repeat that? Pick (y)es or (n)o >> ")
+        
+    # if player is COMPUTER
+    if player == 2:
+
+        # variable to control the looping in this section
+        keepGoing2 = True
+
+        # ask if PLAYER will allow COMPUTER to take a card from their hand
+        print()
+        answer = input("It's the Computer's -- I mean *my* -- turn to take a card from you. Is that alright? (y)es or (n)o >> ")
+        while(keepGoing2):
+
+            # if PLAYER says yes
+            if answer == "y":
+
+                # pick a random card
+                card = randint(0,51)
+
+                # if card is in PLAYER'S hand, assign it to COMPUTER'S hand instead
+                if cardLoc[card] == PLAYER:
+                    cardLoc[card] = COMPUTER
+                    print()
+                    print("Computer -- no, *I* -- took a card!")
+
+                    # leave this loop and return to main function
+                    keepGoing2 = False
+
+            # if PLAYER says no
+            elif answer == "n":
+
+                # offer a second chance to change PLAYER'S mind
+                answer2 = input("The game won't be able to continue! Do you forfeit? (y)es or (n)o >> ")
+
+                # if PLAYER quits, COMPUTER wins
+                if answer2 == "y":
+                    print()
+                    print("Hooray! Computer wins! I mean, *I* win!")
+
+                    # return False to main function to quit looping
+                    return False
+
+                # if PLAYER changes their mind, offer them original choice again
+                elif answer2 == "n":
+                    print()
+                    answer = input("Alright, then will you allow the Computer -- I mean, *me* -- to take a card from your hand? (y)es or (n)o >> ")
+
+                # if there was an input error
+                else:
+                    print()
+                    answer = input("I'm sorry, could you repeat that? Pick (y)es or (n)o >> ")
+                    
+            # if there was an input error
+            else:
+                print()
+                answer = input("I'm sorry, could you repeat that? Pick (y)es or (n)o >> ")
+        
+                  
+main()
