@@ -1,0 +1,77 @@
+""" cardGame.py
+    basic card game framework
+    keeps track of card locations for as many hands as needed
+"""
+from random import *
+
+NUMCARDS = 52
+DECK = 0
+PLAYER = 1
+COMP = 2
+
+cardLoc = [0] * NUMCARDS
+suitName = ("hearts", "diamonds", "spades", "clubs")
+rankName = ("Ace", "Two", "Three", "Four", "Five", "Six", "Seven", 
+            "Eight", "Nine", "Ten", "Jack", "Queen", "King")
+playerName = ("deck", "player", "computer")
+
+def main():
+  clearDeck()
+
+  for i in range(5):
+    assignCard(PLAYER)
+    assignCard(COMP)
+
+  showDeck()
+  showHand(PLAYER)
+  showHand(COMP)      
+
+def clearDeck():
+    # puts all the cards in the deck (set at 0)
+    cardLoc = [0] * NUMCARDS
+    
+
+def assignCard(playerType):
+    keepGoing = True
+    
+    while (keepGoing):
+        
+        # generate a random number between 0 and 51 and assign it to card
+        card = randint(0, 51)
+
+        # if the spot in the cardLoc list at the random number is in the deck, give it to one of the players
+        if cardLoc[card] == 0:
+            cardLoc[card] = playerType
+            keepGoing = False
+            
+def showDeck():
+    # output the table of all cards
+    print("Location of all cards")
+    print("#          Card         Location")
+    
+    # for each number from 1-52, get the position (1-52), the suit, the number on the card, and where the card is (player, computer, or deck)
+    for i in range(NUMCARDS):
+        position = i + 1
+        suit = i // 13
+        number = i % 13
+        owner = playerName[cardLoc[i]]
+        print("{:<4d} {:20s} {}".format(position, rankName[number] + " of " + suitName[suit], owner))
+
+def showHand(playerType):
+    print()
+    
+    # print the correct header for the hand
+    if playerType == 1:
+        print("Displaying player hand:")
+    if playerType == 2:
+        print("Displaying computer hand:")
+   
+    for i in range(NUMCARDS):
+        # if the spot in the cardLoc list has the same number as the playerType (1 or 2), find the suit, the number, and print it
+        if cardLoc[i] == playerType:
+            suit = i // 13
+            number = i % 13
+            print(rankName[number] + " of " + suitName[suit])
+                   
+
+main()
