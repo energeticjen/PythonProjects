@@ -54,139 +54,153 @@ class Game (object):
     def getAlive(self):
         return self.__alive
     alive = property(fget = getAlive, fset = setAlive)
-        
-def Play(currentNode):
-    game = Game(left, middle, right, story, alive={})
-    if alive == True:
-        # special run for node R3
-        if currentNode == "R3":
-            # add towel to inventory
-            inventory.append("towel")
-            #flip the towel switch
-            towel == True
-            choiceCycle = True
-            # didn't like story, didn't like self.story, didn't like Game.story, didn't like object.story
-            print(game.getStory)
-            choice = input(">> ")
-            while(choiceCycle):
-                if choice == "1":
-                    # it didn't like Game.left. I'm going to put just these back to self.*
-                    currentNode = gameNode[game.getLeft]
-                    choiceCycle = False
-                elif choice == "2":
-                    currentNode = gameNode[game.getMiddle]
-                    choiceCycle = False
-                elif choice == "3":
-                    currentNode = gameNode[game.getRight]
-                    choiceCycle = False
-                else:
-                    print("Choice unclear. Please try again.")
-                    choice = input(">> ")
-
-        # special run for node O3: left is going back (Y4), middle is with towel [17], right is no towel [18]
-        elif currentNode == "O3":
-            choiceCycle = True
-            print(game.getStory)
-            choice = input(">> ")
-            while(choiceCycle):
-                if choice == "1":
-                    currentNode = gameNodegame.getLeft]
-                    choiceCycle = False
-                elif choice == "2":
-                    if towel == True:
-                        currentNode = gameNode[game.getMiddle]
-                        choiceCycle = False
-                    else:
-                        currentNode = gameNode[game.getRight]
-                        choiceCycle = False
-                else:
-                    print("Choice unclear. Please try again.")
-                    choice = input(">> ")
-            
-        # special run for node Y3
-        # 16 is towel (right), 14 is shirt (left), 15 is bare hands (middle)
-        elif currentNode == "Y3":
-            choiceCycle = True
-            print("Your inventory currently consists of: {}.".format(inventory))
-            # if user has towel in inventory
-            if towel == True:
-                print()
-                print("Would you like to use your shirt or your towel to wrap your hands in? \n\n1)shirt \n2)towel")
+  
+    def Play(self):
+        global currentNode
+        leftChoice = self.getLeft()
+        middleChoice = self.getMiddle()
+        rightChoice = self.getRight()
+        if alive == True:
+            # special run for node R3
+            if currentNode == "R3":
+                # add towel to inventory
+                inventory.append("towel")
+                #flip the towel switch
+                towel == True
+                choiceCycle = True
+                print(self.getStory())
                 choice = input(">> ")
                 while(choiceCycle):
                     if choice == "1":
-                        currentNode = gameNode[game.getRight]
+                        currentNode = gameNode[currentNode.getLeft]
                         choiceCycle = False
                     elif choice == "2":
-                        currentNode = gameNode[game.getLeft]
+                        currentNode = gameNode[currentNode.getMiddle]
+                        choiceCycle = False
+                    elif choice == "3":
+                        currentNode = gameNode[currentNode.getRight]
                         choiceCycle = False
                     else:
                         print("Choice unclear. Please try again.")
                         choice = input(">> ")
+
+                    #currentNode = gameNode[int(currentNode.getRight)]
+                    #AttributeError: 'int' object has no attribute 'getRight'
                         
-            # if user does not have towel
-            else:
-                print()
-                print("Would you like to use your shirt to wrap your hands in? \n\n1)yes \n2)no")
+            # special run for node O3: left is going back (Y4), middle is with towel [20], right is no towel [21]
+            elif currentNode == "O3":
+                choiceCycle = True
+                print(self.getStory())
                 choice = input(">> ")
                 while(choiceCycle):
                     if choice == "1":
-                        currentNode = gameNode[game.getLeft]
+                        currentNode = gameNode[currentNode.getLeft]
                         choiceCycle = False
                     elif choice == "2":
-                        currentNode = gameNode[game.getMiddle]
+                        if towel == True:
+                            currentNode = gameNode[currentNode.getMiddle]
+                            choiceCycle = False
+                        else:
+                            currentNode = gameNode[currentNode.getRight]
+                            choiceCycle = False
+                    else:
+                        print("Choice unclear. Please try again.")
+                        choice = input(">> ")
+                
+            # special run for node Y3
+            # 19 is towel (right), 17 is shirt (left), 18 is bare hands (middle)
+            elif currentNode == "Y3":
+                choiceCycle = True
+                print("Your inventory currently consists of: {}.".format(inventory))
+                # if user has towel in inventory
+                if towel == True:
+                    print()
+                    print("Would you like to use your shirt or your towel to wrap your hands in? \n\n1)shirt \n2)towel")
+                    choice = input(">> ")
+                    while(choiceCycle):
+                        if choice == "1":
+                            currentNode = gameNode[currentNode.getRight]
+                            choiceCycle = False
+                        elif choice == "2":
+                            currentNode = gameNode[currentNode.getLeft]
+                            choiceCycle = False
+                        else:
+                            print("Choice unclear. Please try again.")
+                            choice = input(">> ")
+                            
+                # if user does not have towel
+                else:
+                    print()
+                    print("Would you like to use your shirt to wrap your hands in? \n\n1)yes \n2)no")
+                    choice = input(">> ")
+                    while(choiceCycle):
+                        if choice == "1":
+                            currentNode = gameNode[currentNode.getLeft]
+                            choiceCycle = False
+                        elif choice == "2":
+                            currentNode = gameNode[currentNode.getMiddle]
+                            choiceCycle = False
+                        else:
+                            print("Choice unclear. Please try again.")
+                            choice = input(">> ")
+
+            # special run for I2: left is with towel [46], middle is dumb choice [39], right is no towel [47]
+            elif currentNode == "I2":
+                choiceCycle = True
+                print(self.getStory())
+                choice = input(">> ")
+                while(choiceCycle):
+                    if choice == "1":
+                        if towel == True:
+                            currentNode = gameNode[currentNode.getLeft]
+                            choiceCycle = False
+                        else:
+                            currentNode = gameNode[currentNode.getRight]
+                            choiceCycle = False
+                    elif choice == "2":
+                        currentNode = gameNode[currentNode.getMiddle]
                         choiceCycle = False
                     else:
                         print("Choice unclear. Please try again.")
                         choice = input(">> ")
 
-        # special run for I2: left is with towel [24], middle is dumb choice [23], right is no towel [25]
-        elif currentNode == "I2":
-            choiceCycle = True
-            print(game.getStory)
-            choice = input(">> ")
-            while(choiceCycle):
-                if choice == "1":
-                    if towel == True:
-                        currentNode = gameNode[game.getLeft]
+            # regular game run
+            else:
+                choiceCycle = True
+                print(self.getStory())
+                # for testing
+                print(self.getLeft(), self.getMiddle(), self.getRight())
+                print(leftChoice, middleChoice, rightChoice)
+                choice = input(">> ")
+                while(choiceCycle):
+                    if choice == "1":
+                        # advice from Felix: change this currentNode variable to a different name. set currentNode variable in the MAIN equal to this variable
+                        # i did it, and it didn't change anything 
+                        gameChoice = gameNode[leftChoice]
+                        # all of these extra variables and prints were for testing
+                        print(currentNode)
+                        print(gameNode[leftChoice])
+                        print(gameChoice)
+                        choiceCycle = False
+                        return gameChoice
+                    elif choice == "2":
+                        currentNode = gameNode[middleChoice]
+                        choiceCycle = False
+                    elif choice == "3":
+                        currentNode = gameNode[rightChoice]
                         choiceCycle = False
                     else:
-                        currentNode = gameNode[game.getRight]
-                        choiceCycle = False
-                elif choice == "2":
-                    currentNode = gameNode[game.getMiddle]
-                    choiceCycle = False
-                else:
-                    print("Choice unclear. Please try again.")
-                    choice = input(">> ")
+                        print("Choice unclear. Please try again.")
+                        choice = input(">> ")
 
-        # regular game run
+        # if user makes a game-ending choice
         else:
-            choiceCycle = True
-            print(game.getStory)
-            choice = input(">> ")
-            while(choiceCycle):
-                if choice == "1":
-                    currentNode = gameNode[game.getLeft]
-                    choiceCycle = False
-                elif choice == "2":
-                    currentNode = gameNode[game.getMiddle]
-                    choiceCycle = False
-                elif choice == "3":
-                    currentNode = gameNode[game.getRight]
-                    choiceCycle = False
-                else:
-                    print("Choice unclear. Please try again.")
-                    choice = input(">> ")
-
-    # if user makes a game-ending choice
-    else:
-        print(game.getStory)
-        keepGoing == False
+            print(self.getStory())
+            keepGoing == False
 
 def main():
-    A = Game(1,2,3, "You wake up, mildly irritated, in your slightly uncomfortable bed. The clock on your night stand reads, '2:47 AM.' Fan-effing-tastic. You sigh, and roll over to your other side to face the wall, in an attempt to fall back asleep. However, there is no wall there. Instead, there is a large hole. You can see the wooden lumber – 2X4s? – the wires, and the crumbly chalkiness of the drywall of both this side and the other side of the wall. Beyond that is a strange metal hallway that you know was not there last night when you took a shower in the bathroom, which used to share this wall with your bedroom. Instead of your cramped bathroom, there is a grated floor and annoying purple lights running along the top of the curved walls and the bottom of both sides of this new walkway. At the end there is either a wall or a door. It is too far away to tell from here in your bed.\n\nWhat would you like to do? \n\n1) Roll back the other way and ignore this strange new addition to your crappy apartment.\n2) Cautiously journey forward into the metallic tunnel.\n3) Grab your still-damp towel, and then cautiously journey forward into the metallic tunnel.", True)
-    R1 = Game(None, None, None, "You manage to fall back asleep, even with that stupid air draft on your back and the clock face shining through your eyelids. When you wake up, your wall looks completely normal. Hooray. Another miserable day of existence. \n\nEND", False)
+    A = Game(1,2,3, "You wake up, mildly irritated, in your slightly uncomfortable bed. The clock on your \nnight stand reads, '2:47 AM.' Fan-effing-tastic. You sigh, and roll over to your \nother side to face the wall, in an attempt to fall back asleep. However, there is no \nwall there. Instead, there is a large hole. You can see the wooden lumber – 2X4s? – \nthe wires, and the crumbly chalkiness of the drywall of both this side and the other \nside of the wall. Beyond that is a strange metal hallway that you know was not there \nlast night when you took a shower in the bathroom, which used to share this wall with \nyour bedroom. Instead of your cramped bathroom, there is a grated floor and annoying \npurple lights running along the top of the curved walls and the bottom of both sides \nof this new walkway. At the end there is either a wall or a door. It is too far away to \ntell from here in your bed.\n\nWhat would you like to do? \n\n1) Roll back the other way and ignore this strange new addition to your crappy apartment.\n2) Cautiously journey forward into the metallic tunnel.\n3) Grab your still-damp towel, and then cautiously journey forward into the metallic tunnel.", True)
+    R1 = Game(None, None, None, "You manage to fall back asleep, even with that stupid air \ndraft on your back and the clock face shining through your eyelids. When you wake \nup, your wall looks completely normal. Hooray. Another miserable day of existence. \n\nEND", False)
     ## in R1, set alive == False
     R2 = Game(4,5,6, "Surprisingly, the metal is not cold on your bare feet. In fact, it’s a little warm. The holes are punched through down, so there are no jagged edges to dig into your soles. As you walk down the tunnel, the purple lights create strange green shadows of you stretching out in front, then shrinking to stretch out behind you. There are no doors or holes or windows or anything interesting on the curved walls leading to the end. When you finally reach the flat, shiny, grey surface, there is no doorknob, handle or any other immediately visible way to get through, except there is a thin line directly down the middle, indicating that this is, in fact, a door. You hear a ‘swoosh’ noise behind you and turn around. Where your wall-turned-hole and crappy bed were, is now another smooth wall matching the tunnel.\n\nWhat would you like to do? \n\n1)Bang on the door in front of you and make a lot of noise yelling. \n2) Examine the door more closely. \n3) Run back down the tunnel to where your apartment was.", True)
     R3 = Game(2, None, None, "You drape your towel around your neck and head through the hole in your wall.", True)
@@ -253,18 +267,19 @@ def main():
     gameNode[28] = V2B
 
     currentNode = gameNode[0]
-   
+
+    print("    ____  __     __         _                _____         _                       ")        
+    print("   / __ \/ /__  / /_  ___  (_)___ _____     / ___/____    (_)___  __  ___________  ")
+    print("  / /_/ / / _ \/ __ \/ _ \/ / __ `/ __ \    \__ \/ __ \  / / __ \/ / / / ___/ __ \ ")
+    print(" / ____/ /  __/ /_/ /  __/ / /_/ / / / /   ___/ / /_/ / / / /_/ / /_/ / /  / / / / ")
+    print("/_/   /_/\___/_.___/\___/_/\__,_/_/ /_/   /____/\____/_/ /\____/\__,_/_/  /_/ /_/  ")
+    print("                                                    /___/                          ")
+    print()
+
     while(keepGoing):
-        Play(currentNode)
-        #okay. The issue you're running into with the Play() method,
-        #is that it's only for a single object.
-        #That's why every time you print the story, it'll be the same
-        #what you want is a function (out side the class) that'll take
-        #the current node and go through the logic, and then set the
-        #object to a different object and repeat. so instead of `currentNode.Play()`,
-        #it'll look like `Play(currentNode)`
-
-
+        currentNode.Play()
+        
+       
 if __name__ == "__main__":
     main()
 
